@@ -161,6 +161,3 @@ This project is for Educational Purposes
 
 ---
 
-## 👤 Author
-
-Made with ❤️ by **[your-username](https://github.com/your-username)**
