@@ -1,0 +1,434 @@
+/* ─── Variables ─────────────────────────────────────────── */
+:root {
+  --bg:        #0b0c0f;
+  --surface:   #13151a;
+  --card:      #1b1d24;
+  --border:    #2a2d38;
+  --accent:    #e8ff47;
+  --accent2:   #47c8ff;
+  --danger:    #ff4f4f;
+  --text:      #f0f0f0;
+  --muted:     #6b6f80;
+  --font-head: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --radius:    14px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── Noise Overlay ──────────────────────────────────────── */
+.noise {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ─── Radial Glow Background ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(ellipse at center, rgba(232,255,71,0.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+header {
+  width: 100%;
+  max-width: 720px;
+  padding: 2.5rem 2rem 0;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 2.4rem;
+  letter-spacing: -1px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ─── Main ───────────────────────────────────────────────── */
+main {
+  width: 100%;
+  max-width: 720px;
+  padding: 2rem 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Arena ──────────────────────────────────────────────── */
+.arena {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.arena::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(232,255,71,0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.side-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  user-select: none;
+}
+
+.avatar.pop {
+  animation: pop 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.22); }
+  70%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+.avatar.win  { border-color: var(--accent);  box-shadow: 0 0 20px rgba(232,255,71,0.25); }
+.avatar.lose { border-color: var(--danger);  box-shadow: 0 0 20px rgba(255,79,79,0.2); }
+.avatar.draw { border-color: var(--accent2); box-shadow: 0 0 20px rgba(71,200,255,0.2); }
+
+.move-name {
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  min-height: 1.2em;
+  transition: color var(--transition);
+}
+
+.move-name.active { color: var(--text); }
+
+/* ─── VS Block ───────────────────────────────────────────── */
+.vs-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vs-text {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--border);
+  letter-spacing: 0.05em;
+}
+
+.result-badge {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.result-badge.win  { background: rgba(232,255,71,0.12);  border-color: var(--accent);  color: var(--accent); }
+.result-badge.lose { background: rgba(255,79,79,0.1);    border-color: var(--danger);  color: var(--danger); }
+.result-badge.draw { background: rgba(71,200,255,0.1);   border-color: var(--accent2); color: var(--accent2); }
+
+/* ─── Scoreboard ─────────────────────────────────────────── */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.score-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1rem;
+  text-align: center;
+}
+
+.score-num {
+  font-family: var(--font-head);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  transition: color var(--transition);
+}
+
+.score-lbl {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+.score-block:first-child .score-num { color: var(--accent); }
+.score-block:last-child  .score-num { color: var(--danger); }
+.score-block:nth-child(2) .score-num { color: var(--accent2); }
+
+/* ─── Controls ───────────────────────────────────────────── */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.move-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  transition: transform var(--transition), border-color var(--transition), background var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.move-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(232,255,71,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.move-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(232,255,71,0.12);
+}
+
+.move-btn:hover::before { opacity: 1; }
+
+.move-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+}
+
+.btn-label {
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.move-btn.selected {
+  border-color: var(--accent);
+  background: rgba(232,255,71,0.07);
+}
+
+.move-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Reset Button ───────────────────────────────────────── */
+.reset-btn {
+  align-self: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.reset-btn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ─── Footer ─────────────────────────────────────────────── */
+footer {
+  width: 100%;
+  max-width: 720px;
+  padding: 0 1.5rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+footer p {
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ─── Rules Guide ────────────────────────────────────────── */
+.rules {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.rule-item {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rule-item span { color: var(--text); }
+
+/* ─── History Strip ──────────────────────────────────────── */
+.history-strip {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding: 0.2rem 0;
+  min-height: 28px;
+  align-items: center;
+  scrollbar-width: none;
+}
+
+.history-strip::-webkit-scrollbar { display: none; }
+
+.history-chip {
+  font-size: 0.6rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+}
+
+.history-chip.win  { border-color: rgba(232,255,71,0.3); color: var(--accent); }
+.history-chip.lose { border-color: rgba(255,79,79,0.3);  color: var(--danger); }
+.history-chip.draw { border-color: rgba(71,200,255,0.3); color: var(--accent2); }
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .logo { font-size: 1.8rem; }
+
+  .arena {
+    padding: 1.4rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .avatar {
+    width: 68px;
+    height: 68px;
+    font-size: 2rem;
+  }
+
+  .vs-text { font-size: 1.1rem; }
+  .result-badge { font-size: 0.55rem; padding: 0.25rem 0.6rem; }
+
+  .move-btn { padding: 1rem 0.5rem; }
+  .btn-icon { font-size: 1.7rem; }
+  .btn-label { font-size: 0.72rem; }
+
+  .score-num { font-size: 1.7rem; }
+
+  .rules { gap: 1rem; }
+}

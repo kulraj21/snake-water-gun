@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Snake · Water · Gun</title>
+  <link rel="stylesheet" href="static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="noise"></div>
+
+  <header>
+    <div class="logo">SWG</div>
+    <div class="tagline">Snake · Water · Gun</div>
+  </header>
+
+  <main>
+    <div class="arena">
+
+      <div class="side user-side">
+        <span class="side-label">YOU</span>
+        <div class="avatar" id="userAvatar">?</div>
+        <div class="move-name" id="userMoveName">—</div>
+      </div>
+
+      <div class="vs-block">
+        <div class="vs-text">VS</div>
+        <div class="result-badge" id="resultBadge">Pick a move</div>
+      </div>
+
+      <div class="side cpu-side">
+        <span class="side-label">CPU</span>
+        <div class="avatar" id="cpuAvatar">?</div>
+        <div class="move-name" id="cpuMoveName">—</div>
+      </div>
+
+    </div>
+
+    <div class="scoreboard">
+      <div class="score-block">
+        <div class="score-num" id="scoreUser">0</div>
+        <div class="score-lbl">Wins</div>
+      </div>
+      <div class="score-block">
+        <div class="score-num" id="scoreDraws">0</div>
+        <div class="score-lbl">Draws</div>
+      </div>
+      <div class="score-block">
+        <div class="score-num" id="scoreCpu">0</div>
+        <div class="score-lbl">Losses</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="move-btn" onclick="play('snake')" data-move="snake">
+        <span class="btn-icon">🐍</span>
+        <span class="btn-label">Snake</span>
+      </button>
+      <button class="move-btn" onclick="play('water')" data-move="water">
+        <span class="btn-icon">💧</span>
+        <span class="btn-label">Water</span>
+      </button>
+      <button class="move-btn" onclick="play('gun')" data-move="gun">
+        <span class="btn-icon">🔫</span>
+        <span class="btn-label">Gun</span>
+      </button>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+
+  </main>
+
+  <footer>
+    <p>AI adapts to your pattern — can you outsmart it?</p>
+  </footer>
+
+  <script src="static/script.js"></script>
+</body>
+</html>
